@@ -3,6 +3,7 @@
            https://api.github.com/users/<your name>
 */
 
+
 /* Step 2: Inspect and study the data coming back, this is YOUR 
    github info! You will need to understand the structure of this 
    data in order to use it to build your component function 
@@ -24,7 +25,7 @@
           user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+
 
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
@@ -45,6 +46,90 @@ const followersArray = [];
 </div>
 
 */
+
+function GithubCard(data) {
+  const card = document.createElement("div");
+  const img = document.createElement("img");
+  const cardInfo = document.createElement("div");
+  const name = document.createElement("h3");
+  const username = document.createElement("p");
+  const location = document.createElement("p");
+  const profile = document.createElement("p");
+  const a = document.createElement("a");
+  const followers = document.createElement("p");
+  const following = document.createElement("p");
+  const bio = document.createElement("p");
+  const calendar = document.createElement("div");
+
+  card.classList.add("card");
+  img.src = data.avatar_url;
+  cardInfo.classList.add('card-info');
+  name.classList.add('name');
+  name.textContent = `${data.name}`;
+  username.classList.add('username');
+  username.textContent = `${data.login}`;
+  location.textContent = `Location: ${data.location}`;
+  profile.textContent = `Profile: `;
+  a.href = data.html_url;
+  a.textContent = `${data.html_url}`;
+  followers.textContent = `Followers: ${data.followers}`;
+  following.textContent = `Followers: ${data.following}`;
+  bio.textContent = `Bio: ${data.bio}`;
+  // calendar.classList.add("calendar");
+
+
+  card.appendChild(img);
+  card.appendChild(cardInfo);
+  cardInfo.appendChild(name);
+  cardInfo.appendChild(username);
+  cardInfo.appendChild(location);
+  cardInfo.appendChild(profile);
+  profile.appendChild(a);
+  cardInfo.appendChild(followers);
+  cardInfo.appendChild(following);
+  cardInfo.appendChild(bio);
+  // card.appendChild(calendar);
+  return card;
+
+}
+
+const entryPoint = document.querySelector('.cards');
+
+axios
+  .get(`https://api.github.com/users/ModernAdmiral`)
+  .then(response => {
+    console.log(response);
+      const newCard = GithubCard(response.data);
+      entryPoint.appendChild(newCard);
+  })
+
+  .catch(error => {
+    console.log("The data was not returned", error);
+  });
+
+
+  let followersArray = [
+    'Velqro',
+    'tetondan',
+    'dustinmyers',
+    'justsml',
+    'luishrd',
+    'bigknell'
+  ];
+
+  followersArray.forEach(e => {
+    axios 
+      .get(`https://api.github.com/users/${e}`)
+      .then(response => {
+        entryPoint.appendChild(GithubCard(response.data));
+      })
+      .catch(error => {
+        console.log("The data was not returned", error)
+      });
+  })
+  
+
+  console.log(GitHubCalendar(".calendar", "your-username", { responsive: true }))
 
 /* List of LS Instructors Github username's: 
   tetondan
